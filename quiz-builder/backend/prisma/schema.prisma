@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Quiz {
+  id        String     @id @default(uuid())
+  title     String
+  questions Question[]
+  createdAt DateTime   @default(now())
+}
+
+model Question {
+  id             String       @id @default(uuid())
+  quiz           Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId         String
+  text           String
+  type           QuestionType
+  correctAnswers String[]
+  options        String[]
+}
+
+enum QuestionType {
+  BOOLEAN
+  INPUT
+  CHECKBOX
+}
